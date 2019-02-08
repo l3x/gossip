@@ -69,6 +69,7 @@ RUN go get -u github.com/golang/dep/cmd/dep
 
 #COPY ./Gopkg.toml ./Gopkg.lock ./
 COPY ./* ./
+#COPY configs/ /configs/
 RUN dep ensure -v --vendor-only
 
 #RUN go get github.com/ethereum/go-ethereum/cmd/abigen
@@ -82,19 +83,23 @@ RUN dep ensure -v --vendor-only
 #COPY ./pkg/beacon/relay/dkg/gen $APP_DIR/pkg/beacon/relay/dkg/gen
 #RUN go generate ./.../gen
 
-COPY ./ $APP_DIR/
+#COPY ./* $APP_DIR/
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o $APP_NAME ./ && \
-	mv $APP_NAME $BIN_PATH
+RUN cd /go/src/github.com/l3x/ && rm -rf ./gossip && git clone https://github.com/l3x/gossip.git
 
-FROM runtime
+#RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o $APP_NAME ./ && \
+#	mv $APP_NAME $BIN_PATH
 
-COPY --from=gobuild $BIN_PATH/$APP_NAME $BIN_PATH
+#FROM runtime
+#
+#COPY --from=gobuild $APP_DIR/ /
+#COPY --from=gobuild $APP_DIR/configs/ /
+#COPY --from=gobuild $BIN_PATH/$APP_NAME $BIN_PATH
 #COPY --from=cbuild $LIB_DIR $LIB_DIR
 #COPY --from=cbuild $INCLUDE_DIR $INCLUDE_DIR
 
 # ENTRYPOINT cant handle ENV variables.
-ENTRYPOINT ["gossip", "-b", "7000", "-p", "7000"]
+#ENTRYPOINT ["gossip", "-b", "7000", "-p", "7000"]
 
 # docker caches more when using CMD [] resulting in a faster build.
 CMD []

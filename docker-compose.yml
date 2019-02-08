@@ -6,8 +6,7 @@ services:
     volumes:
       - .:/go/src/gossip
     working_dir: /go/src/gossip
-    command: go run main.go
+    command: go run helpers.go websockets.go handlers.go server.go types.go broadcast.go hub.go router.go main.go store.go -b 7000 -p 7000
     environment:
       PORT: 7000
-
-
+      ROOT_DIR: /go/src/github.com/l3x/gossip
