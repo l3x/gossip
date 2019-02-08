@@ -1,0 +1,13 @@
+version: "2"
+
+services:
+  app:
+    build: .
+    volumes:
+      - .:/go/src/gossip
+    working_dir: /go/src/gossip
+    command: go run main.go
+    environment:
+      PORT: 7000
+
+
